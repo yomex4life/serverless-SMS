@@ -26,11 +26,8 @@ exports.handler  = async event =>{
     }
 
     try {
-        console.log('We are here now')
         await SNS.setSMSAttributes(AttributeParams).promise()
         await SNS.publish(messageParams).promise()
-
-        console.log('We got here')
 
         return Responses.buildResponse(200, {
             message: 'Text has been sent to phone number'
