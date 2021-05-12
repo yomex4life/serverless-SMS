@@ -15,6 +15,8 @@ provider:
         - sns:SetSMSAttributes
         - sns:Publish
       Resource: '*'
+  apiKeys:
+    - MyFirstApiKey
 
 
 functions:
@@ -25,5 +27,6 @@ functions:
           path: send-sms
           method: post
           cors: true
+          private: true #for adding an API key
  
 

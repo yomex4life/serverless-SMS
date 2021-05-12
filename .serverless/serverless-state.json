@@ -19,6 +19,9 @@
           "Resource": "*"
         }
       ],
+      "apiKeys": [
+        "MyFirstApiKey"
+      ],
       "stage": "dev",
       "variableSyntax": "\\${([^{}:]+?(?:\\(|:)(?:[^:{}][^{}]*?)?)}",
       "versionFunctions": true,
@@ -188,7 +191,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/SNSexperiment/dev/1620754494122-2021-05-11T17:34:54.122Z/SNSexperiment.zip"
+                "S3Key": "serverless/SNSexperiment/dev/1620855116766-2021-05-12T21:31:56.766Z/SNSexperiment.zip"
               },
               "Handler": "src/sendSMS.handler",
               "Runtime": "nodejs12.x",
@@ -206,14 +209,14 @@
               "SendSMSLogGroup"
             ]
           },
-          "SendSMSLambdaVersionkdzinhGgNd9JvqGlKedJrpvTYNEoSbQJLvOpmYVhw": {
+          "SendSMSLambdaVersion4MgneRzu6cOb4BuDXrb7xNWvE99lVp0G9VGVwJTBjzc": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "SendSMSLambdaFunction"
               },
-              "CodeSha256": "m2V1/R49o3bytepEv8WqXt2EQM03kgfYwpuhLuPq+Gw="
+              "CodeSha256": "X6YC+vna4tLmIVtypfQ/SuJ2nGN+HpeVLRvtVVeb7hc="
             }
           },
           "ApiGatewayRestApi": {
@@ -299,7 +302,7 @@
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
               },
-              "ApiKeyRequired": false,
+              "ApiKeyRequired": true,
               "AuthorizationType": "NONE",
               "Integration": {
                 "IntegrationHttpMethod": "POST",
@@ -331,7 +334,7 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayDeployment1620754493341": {
+          "ApiGatewayDeployment1620855115914": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -343,6 +346,50 @@
               "ApiGatewayMethodSendDashsmsOptions",
               "ApiGatewayMethodSendDashsmsPost"
             ]
+          },
+          "ApiGatewayApiKey1": {
+            "Type": "AWS::ApiGateway::ApiKey",
+            "Properties": {
+              "Enabled": true,
+              "Name": "MyFirstApiKey",
+              "StageKeys": [
+                {
+                  "RestApiId": {
+                    "Ref": "ApiGatewayRestApi"
+                  },
+                  "StageName": "dev"
+                }
+              ]
+            },
+            "DependsOn": "ApiGatewayDeployment1620855115914"
+          },
+          "ApiGatewayUsagePlan": {
+            "Type": "AWS::ApiGateway::UsagePlan",
+            "DependsOn": "ApiGatewayDeployment1620855115914",
+            "Properties": {
+              "ApiStages": [
+                {
+                  "ApiId": {
+                    "Ref": "ApiGatewayRestApi"
+                  },
+                  "Stage": "dev"
+                }
+              ],
+              "Description": "Usage plan for SNSexperiment dev stage",
+              "UsagePlanName": "SNSexperiment-dev"
+            }
+          },
+          "ApiGatewayUsagePlanKey1": {
+            "Type": "AWS::ApiGateway::UsagePlanKey",
+            "Properties": {
+              "KeyId": {
+                "Ref": "ApiGatewayApiKey1"
+              },
+              "KeyType": "API_KEY",
+              "UsagePlanId": {
+                "Ref": "ApiGatewayUsagePlan"
+              }
+            }
           },
           "SendSMSLambdaPermissionApiGateway": {
             "Type": "AWS::Lambda::Permission",
@@ -394,7 +441,7 @@
           "SendSMSLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "SendSMSLambdaVersionkdzinhGgNd9JvqGlKedJrpvTYNEoSbQJLvOpmYVhw"
+              "Ref": "SendSMSLambdaVersion4MgneRzu6cOb4BuDXrb7xNWvE99lVp0G9VGVwJTBjzc"
             },
             "Export": {
               "Name": "sls-SNSexperiment-dev-SendSMSLambdaFunctionQualifiedArn"
@@ -540,6 +587,7 @@
                 ],
                 "allowCredentials": false
               },
+              "private": true,
               "integration": "AWS_PROXY"
             }
           }
@@ -550,7 +598,7 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "SendSMSLambdaVersionkdzinhGgNd9JvqGlKedJrpvTYNEoSbQJLvOpmYVhw"
+        "versionLogicalId": "SendSMSLambdaVersion4MgneRzu6cOb4BuDXrb7xNWvE99lVp0G9VGVwJTBjzc"
       }
     },
     "configValidationMode": "warn",
@@ -572,7 +620,7 @@
     "artifact": "/Users/4life/Documents/Serverless/SNSexperiment/.serverless/SNSexperiment.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/SNSexperiment/dev/1620754494122-2021-05-11T17:34:54.122Z",
+    "artifactDirectoryName": "serverless/SNSexperiment/dev/1620855116766-2021-05-12T21:31:56.766Z",
     "artifact": "SNSexperiment.zip"
   }
 }
